@@ -15,9 +15,14 @@ module RailsPerformance
     def Utils.fetch_from_redis(query)
       RailsPerformance.log "\n\n   [REDIS QUERY]   -->   #{query}\n\n"
 
-      keys   = RailsPerformance.redis.keys(query)
-      return [] if keys.blank?
-      values = RailsPerformance.redis.mget(keys)
+      begin 
+        keys   = RailsPerformance.redis.keys(query)
+        return [] if keys.blank?
+        values = RailsPerformance.redis.mget(keys)
+      rescue => error
+        RailsPerformance.log "\n\n [REDIS CONNECTION NOT FOUND]"
+        return [] 
+      end
 
       RailsPerformance.log "\n\n   [FOUND]   -->   #{values.size}\n\n"
 
@@ -30,7 +35,11 @@ module RailsPerformance
 
       RailsPerformance.log "  [SAVE]    key  --->  #{key}\n"
       RailsPerformance.log "  [SAVE]    value  --->  #{value.to_json}\n\n"
-      RailsPerformance.redis.set(key, value.to_json, ex: expire.to_i)
+      begin
+        RailsPerformance.redis.set(key, value.to_json, ex: expire.to_i)
+      rescue => error
+        RailsPerformance.log "\n\n [REDIS CONNECTION NOT FOUND]"
+      end
     end
 
     def Utils.days

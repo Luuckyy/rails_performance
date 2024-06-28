@@ -94,7 +94,11 @@ def dummy_delayed_job_record(datetimei: Time.current.to_i, status: 'success', ji
 end
 
 def reset_redis
-  RailsPerformance.redis.redis.flushall
+  begin
+    RailsPerformance.redis.redis.flushall
+  rescue => error
+    RailsPerformance.log "\n\n [REDIS CONNECTION NOT FOUND]"
+  end
 end
 
 # TODO improve

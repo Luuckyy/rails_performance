@@ -1,7 +1,7 @@
 module RailsPerformance
   module Models
     class RequestRecord < BaseRecord
-      attr_accessor :controller, :action, :format, :status, :datetime, :datetimei, :method, :path, :request_id, :json
+      attr_accessor :controller, :action, :status, :datetime, :datetimei, :method, :request_id, :json
       attr_accessor :view_runtime, :db_runtime, :duration, :http_referer, :custom_data
       attr_accessor :exception, :exception_object
 
@@ -33,26 +33,22 @@ module RailsPerformance
         RequestRecord.new(
           controller: items[2],
           action: items[4],
-          format: items[6],
           status: items[8],
           datetime: items[10],
           datetimei: items[12],
           method: items[14],
-          path: items[16],
           request_id: items[18],
           json: value
         )
       end
 
-      def initialize(controller:, action:, format:, status:, datetime:, datetimei:, method:, path:, request_id:, view_runtime: nil, db_runtime: nil, duration: nil, http_referer: nil, custom_data: nil, exception: nil, exception_object: nil, json: '{}')
+      def initialize(controller:, action:, status:, datetime:, datetimei:, method:, request_id:, view_runtime: nil, db_runtime: nil, duration: nil, http_referer: nil, custom_data: nil, exception: nil, exception_object: nil, json: '{}')
         @controller   = controller
         @action       = action
-        @format       = format
         @status       = status
         @datetime     = datetime
         @datetimei    = datetimei.to_i
         @method       = method
-        @path         = path
         @request_id   = request_id
 
         @view_runtime = view_runtime
@@ -72,7 +68,7 @@ module RailsPerformance
       end
 
       def controller_action_format
-        "#{controller}##{action}|#{format}"
+        "#{controller}##{action}"
       end
 
       # show on UI in the right panel
@@ -80,10 +76,8 @@ module RailsPerformance
         {
           controller: self.controller,
           action: self.action,
-          format: self.format,
           status: self.status,
           method: self.method,
-          path: self.path,
           request_id: self.request_id,
           datetime: Time.at(self.datetimei.to_i),
           datetimei: datetimei,
@@ -102,7 +96,7 @@ module RailsPerformance
       end
 
       def save
-        key   = "performance|controller|#{controller}|action|#{action}|format|#{format}|status|#{status}|datetime|#{datetime}|datetimei|#{datetimei}|method|#{method}|path|#{path}|request_id|#{request_id}|END|#{RailsPerformance::SCHEMA}"
+        key   = "performance|controller|#{controller}|action|#{action}|status|#{status}|datetime|#{datetime}|datetimei|#{datetimei}|method|#{method}|request_id|#{request_id}|END|#{RailsPerformance::SCHEMA}"
         value = {
           view_runtime: view_runtime,
           db_runtime: db_runtime,

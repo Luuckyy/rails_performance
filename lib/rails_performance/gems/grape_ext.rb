@@ -19,9 +19,7 @@ module RailsPerformance
 
           if payload[:env]
             CurrentRequest.current.record.status      = payload[:env]['api.endpoint'].status
-            CurrentRequest.current.record.format      = payload[:env]["api.format"]
             CurrentRequest.current.record.method      = payload[:env]['REQUEST_METHOD']
-            CurrentRequest.current.record.path        = payload[:env]["PATH_INFO"]
           end
 
           if name == 'format_response.grape'

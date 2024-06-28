@@ -8,8 +8,13 @@ module RailsPerformance
       end
 
       def data
-        key   = "trace|#{request_id}|END|#{RailsPerformance::SCHEMA}"
-        JSON.parse(RailsPerformance.redis.get(key).presence || '[]')
+        begin
+          key   = "trace|#{request_id}|END|#{RailsPerformance::SCHEMA}"
+          JSON.parse(RailsPerformance.redis.get(key).presence || '[]')
+        rescue => error
+          RailsPerformance.log "\n\n [REDIS CONNECTION NOT FOUND]"
+          return [] 
+        end
       end
     end
 
