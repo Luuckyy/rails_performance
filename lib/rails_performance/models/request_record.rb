@@ -33,16 +33,16 @@ module RailsPerformance
         RequestRecord.new(
           controller: items[2],
           action: items[4],
-          status: items[8],
-          datetime: items[10],
-          datetimei: items[12],
-          method: items[14],
-          request_id: items[18],
+          status: items[6],
+          datetime: items[8],
+          datetimei: items[10],
+          method: items[12],
+          request_id: items[14],
           json: value
         )
       end
 
-      def initialize(controller:, action:, status:, datetime:, datetimei:, method:, request_id:, view_runtime: nil, db_runtime: nil, duration: nil, http_referer: nil, custom_data: nil, exception: nil, exception_object: nil, json: '{}')
+      def initialize(controller:, action:, format: nil, status:, datetime:, datetimei:, method:, path: nil, request_id:, view_runtime: nil, db_runtime: nil, duration: nil, http_referer: nil, custom_data: nil, exception: nil, exception_object: nil, json: '{}')
         @controller   = controller
         @action       = action
         @status       = status
